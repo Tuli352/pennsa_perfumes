@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body { @apply bg-cream text-wine-900 font-body antialiased; }
+  h1, h2, h3 { @apply font-heading font-medium; }       /* headings: Cormorant Garamond */
+  h4, h5 { @apply font-sub; }                            /* subheadings: Cardo */
+}
+
+@layer components {
+  /* Gold primary button (hero, key calls to action) */
+  .btn-gold { @apply inline-flex items-center justify-center gap-3 rounded-md px-7 py-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-wine-950 shadow-md transition hover:brightness-110;
+    background: linear-gradient(135deg, #f6d9b4 0%, #e6b17c 100%); }
+  /* Outlined button on dark backgrounds */
+  .btn-outline { @apply inline-flex items-center justify-center gap-3 border border-blush/70 px-6 py-3 text-[11px] uppercase tracking-[0.2em] text-blush transition hover:bg-blush hover:text-wine-950; }
+  /* Maroon button on cream cards (Add to cart) */
+  .btn-wine { @apply inline-flex items-center justify-center gap-2 rounded-full bg-wine-700 px-5 py-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-blush transition hover:bg-wine-900 disabled:cursor-not-allowed disabled:opacity-50; }
+  .nav-link { @apply text-[11px] uppercase tracking-[0.2em] transition hover:text-gold-300; }
+  .eyebrow { @apply text-[11px] uppercase tracking-[0.3em] text-gold-500; }
+  .field { @apply w-full rounded-md border border-wine-700/25 bg-white/60 px-4 py-3 text-sm text-wine-900 placeholder:text-wine-700/50 focus:border-wine-600 focus:outline-none; }
+  .chip { @apply rounded-full border border-wine-700/30 px-4 py-2 text-[11px] uppercase tracking-[0.16em] transition hover:border-wine-700; }
+  .chip-active { @apply border-wine-700 bg-wine-700 text-blush; }
+}
+
+@layer utilities {
+  .fade-left { -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 38%); mask-image: linear-gradient(to right, transparent 0%, #000 38%); }
+  .rule { @apply h-px flex-1 bg-wine-700/25; }
+}
+
+@keyframes slide-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes zoom-slow { from { transform: scale(1.04); } to { transform: scale(1.12); } }
+.anim-in { animation: slide-in 0.9s ease both; }
+.anim-zoom { animation: zoom-slow 9s ease-out both; }
+@media (prefers-reduced-motion: reduce) { .anim-in, .anim-zoom { animation: none; } html { scroll-behavior: auto; } }

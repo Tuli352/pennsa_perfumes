@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  FULFILLED
+  CANCELLED
+}
+
+// Collections act as the "shop by" categories: Women's, Men's, Unisex, Oud ...
+model Collection {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  name        String
+  description String?
+  image       String?
+  products    Product[]
+}
+
+model Product {
+  id           String      @id @default(cuid())
+  slug         String      @unique
+  name         String
+  brand        String      @default("")        // e.g. Lattafa, Maison Alhambra
+  tagline      String?                          // "Floral • Elegant • Feminine"
+  description  String
+  family       String?                          // scent family slug: floral, woody, oud, citrus, amber
+  notes        String[]                         // key notes shown on the product page
+  badge        String?                          // NEW, BEST SELLER, TRENDING
+  price        Int                              // minor units (cents): KSh 8,500 = 850000
+  comparePrice Int?                             // original price, for "Save x%" badges
+  images       String[]
+  featured     Boolean     @default(false)
+  collection   Collection? @relation(fields: [collectionId], references: [id])
+  collectionId String?
+  variants     Variant[]
+  createdAt    DateTime    @default(now())
+}
+
+model Variant {
+  id        String      @id @default(cuid())
+  product   Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+  size      String                              // "100ml"
+  color     String      @default("Default")
+  stock     Int         @default(0)
+  items     OrderItem[]
+  @@unique([productId, size, color])
+}
+
+model Order {
+  id        String      @id @default(cuid())
+  email     String
+  name      String
+  phone     String?
+  address   String
+  country   String      @default("KE")
+  total     Int
+  status    OrderStatus @default(PENDING)
+  items     OrderItem[]
+  createdAt DateTime    @default(now())
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId   String
+  variant   Variant @relation(fields: [variantId], references: [id])
+  variantId String
+  quantity  Int
+  unitPrice Int
+}
+
+model Subscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
